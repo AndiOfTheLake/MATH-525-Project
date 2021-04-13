@@ -142,22 +142,33 @@ $$
 $$
 
 
-Recall from lecture that a greater value of $SSB-\sum_{h=1}^H S^2_h=\sum_{h=1}^H N_h (\bar{y}_{hu}-\bar{y}_u)^2-\sum_{h=1}^H S^2_h$ leads to a more efficient proportional allocation. Therefore, we only have to check which variable produces the larger $SSB$, and this variable is the more efficient stratification variable. Of course, we cannot compute $SSB$ since it (indirectly) involves the parameter of interest. Therefore, we make the comparison by using an estimate of $SSE:$
+Define $\Delta:=SSB-\sum_{h=1}^H S^2_h=\sum_{h=1}^H N_h (\bar{y}_{hu}-\bar{y}_u)^2-\sum_{h=1}^H S^2_h$. Recall from lecture that a greater $\Delta$ leads to a more efficient proportional allocation. Therefore, we only have to check which variable produces the larger $\Delta$, and this variable is the more efficient stratification variable. Of course, we cannot compute $SSB$ or $\sum_{h=1}^H S^2_h$ which means we cannot compute $\Delta$. However, we can make the comparison by using estimates of those quantities with 
 
 $$
-\widehat{SSB}=\sum_{h=1}^H N_h (\hat{\bar{y}}_{hu}-\hat{\bar{y}}_u)^2,
+\widehat{SSB}=\sum_{h=1}^H N_h (\hat{\bar{y}}_{hu}-\hat{\bar{y}}_u)^2
 $$
 
-where $\hat{\bar{y}}_{hu}$ and $\hat{\bar{y}}_u$ are sample means.
+and 
+
+$$
+\hat{S}^2_h=s^2_h,
+$$
+
+
+
+where $\hat{\bar{y}}_{hu}$ and $\hat{\bar{y}}_u$ are sample means. It follows that a suitable estimate of $\Delta$ is 
+
+$$
+\hat{\Delta}=\widehat{SSB}-s^2_h.
+$$
 
 Let us first look at the continent variable.
-
 <<sub-task1-cont>>=
 
 @
 
 
-Hence $\widehat{SSB}$ based on ``continent" variable is 621.
+Hence $\hat{\Delta}$ based on ``continent" variable is 615.7.
 
 We do the same calculation with the ``Branch" variable.
 
@@ -166,9 +177,9 @@ We do the same calculation with the ``Branch" variable.
 @
 
 
-Hence $\widehat{SSB}$ based on ``Branch" variable is 1410.  
+Hence $\hat{\Delta}$ based on ``Branch" variable is 1407.  
 
-Since $\widehat{SSB}$ based on ``Branch" variable is greater, we should choose ``Branch" as stratification variable.
+Since $\hat{\Delta}$ based on ``Branch" variable is greater, we should choose ``Branch" as stratification variable.
 
 \section{Sub-task 2}
 We assume that the cost for each sample is the same across strata. Under this assumption, we know from lecture that optimal allocation is Neyman allocation, i.e.
