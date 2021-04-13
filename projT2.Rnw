@@ -1,0 +1,201 @@
+%a latex reference could be found here https://en.wikibooks.org/wiki/LaTeX
+\documentclass[12pt, letterpaper, twoside]{article}
+%fontsize, papersize, NO separate titlepage
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage{bookmark}% without it there will be no bookmarks for the 
+\usepackage{geometry}
+\usepackage{setspace}% used to set spacings between lines
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% paragraph glue %%%%%%%%%%%%%%%%%%%%%%%%%%
+\raggedbottom % changes paragraph glue, otherwise awkwardly huge spaces
+
+
+% Some macros 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Probability and statistics %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\E}[1]{\mathbbm{E}\left [ #1 \right ]} % Expectation
+\newcommand{\var}[1]{\text{Var}\left [ #1 \right ]} % Variance
+\newcommand{\cov}[1]{\text{Cov}\left [ #1 \right ]} % Covariance
+
+\providecommand{\P}{}
+\renewcommand{\P}{\text{P}} % probability measure, rarely used
+\newcommand{\pr}[1]{\text{P}\left ( #1 \right )} % probability of a set, often used
+
+\newcommand{\set}[1]{\left \{ #1 \right \}} % set 
+\newcommand{\Set}[2]{\left \{#1 \mid #2\right \}} % set, #2 is a \text{$x$} kind of argument
+
+\newcommand{\I}{\mathcal{I}} % pi-system
+\newcommand{\D}{\mathcal{D}} % Dynkin's system
+
+\newcommand{\limit}[2]{\lim_{#1 \to #2}} % limit
+\newcommand{\rbr}[1]{\left ( #1 \right )} % round brackets
+\newcommand{\sbr}[1]{\left [ #1 \right ]} % square brackets
+\newcommand{\abs}[1]{\left | #1 \right |} % absolute value
+
+\newcommand{\sam}{\mathcal{S}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% linear algebra and other mathematics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator*{\tr}{tr} % Trace
+\DeclareMathOperator*{\diag}{diag} % Diagonal matrix
+\DeclareMathOperator*{\sign}{sign} % Sign
+\newcommand{\norm}[2]{\left \| #1 \right \|_{#2}} % norm
+\newcommand{\1}{\mathbbm{1}} % Indicator
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+%%%%%%%%%%%%%%%%%%%%%%% NATURAL NUMBERS, INTEGERS, ETC. %%%%%%%%%%%%%%%%
+\providecommand{\R}{}
+\providecommand{\Z}{}
+\providecommand{\N}{}
+\providecommand{\C}{}
+\providecommand{\Q}{}
+
+\renewcommand{\R}{\mathbb{R}}
+\renewcommand{\Z}{\mathbb{Z}}
+\renewcommand{\N}{{\mathbb N}}
+\renewcommand{\C}{\mathbb{C}}
+\renewcommand{\Q}{\mathbb{Q}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BOLDFACE %%%%%%%%%%%%%%%%%%%%
+\newcommand{\bA}{\mathbf{A}} 
+\newcommand{\bB}{\mathbf{B}} 
+\newcommand{\bC}{\mathbf{C}} 
+\newcommand{\bD}{\mathbf{D}} 
+\newcommand{\bE}{\mathbf{E}} 
+\newcommand{\bF}{\mathbf{F}} 
+\newcommand{\bG}{\mathbf{G}} 
+\newcommand{\bH}{\mathbf{H}} 
+\newcommand{\bI}{\mathbf{I}} 
+\newcommand{\bJ}{\mathbf{J}} 
+\newcommand{\bK}{\mathbf{K}} 
+\newcommand{\bL}{\mathbf{L}} 
+\newcommand{\bM}{\mathbf{M}} 
+\newcommand{\bN}{\mathbf{N}} 
+\newcommand{\bO}{\mathbf{O}} 
+\newcommand{\bP}{\mathbf{P}} 
+\newcommand{\bQ}{\mathbf{Q}} 
+\newcommand{\bR}{\mathbf{R}} 
+\newcommand{\bS}{\mathbf{S}} 
+\newcommand{\bT}{\mathbf{T}} 
+\newcommand{\bU}{\mathbf{U}} 
+\newcommand{\bV}{\mathbf{V}} 
+\newcommand{\bW}{\mathbf{W}} 
+\newcommand{\bX}{\mathbf{X}} 
+\newcommand{\bY}{\mathbf{Y}} 
+\newcommand{\bZ}{\mathbf{Z}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% boldsymbol %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% color %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% file specific macros %%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\varprop}[1]{\text{Var}_{prop}\left [ #1 \right ]} % Variance of (population total or mean) under proportional allocation
+\newcommand{\varopt}[1]{\text{Var}_{opt}\left [ #1 \right ]} % Variance of (population total or mean) under optimal allocation
+
+\setcounter{secnumdepth}{0}%no automatic numbering of the sections
+\geometry{letterpaper, portrait, margin=1in}%set page margins
+
+\title{MATH 525 Project Task 2}
+\author{Andi Qian \\}
+\date{last updated: \today}
+
+%\doublespacing %(this makes double space, from setspac package)
+\begin{document}
+
+\maketitle
+
+<<setup, cache=FALSE, include=FALSE>>=
+library(knitr)
+
+opts_chunk$set(tidy.opts=list(width.cutoff=60), 
+               background = '#FAFAFA', 
+               comment = NA, warning = F, tidy = T, 
+  fig.align='center', fig.height=4.25, fig.width=6)
+
+#digits<-4
+#options(scipen=2, digits=digits,width = 80)
+@
+
+<<echo=FALSE, include=FALSE>>=
+read_chunk("projT2.R")
+@
+
+
+
+<<pkg, include=FALSE>>=
+@
+
+<<load data>>=
+
+@
+
+\section{Sub-task 1}
+Sub-task 1 and Sub-task 2 are related in that we need to determine the stratification variable in Sub-task 1 and work out the optimal sample sizes in Sub-task 2 under optimal allocation. Notice that to determine which variable to stratify on, it suffices to consider the case of \textit{proportional} rather than optimal allocation. This is because for a fixed stratification variable we have 
+
+$$
+\varopt{\hat{t}}\leq \varprop{\hat{t}}.
+$$
+
+
+Recall from lecture that a greater value of $SSB-\sum_{h=1}^H S^2_h=\sum_{h=1}^H N_h (\bar{y}_{hu}-\bar{y}_u)^2-\sum_{h=1}^H S^2_h$ leads to a more efficient proportional allocation. Therefore, we only have to check which variable produces the larger $SSB$, and this variable is the more efficient stratification variable. Of course, we cannot compute $SSB$ since it (indirectly) involves the parameter of interest. Therefore, we make the comparison by using an estimate of $SSE:$
+
+$$
+\widehat{SSB}=\sum_{h=1}^H N_h (\hat{\bar{y}}_{hu}-\hat{\bar{y}}_u)^2,
+$$
+
+where $\hat{\bar{y}}_{hu}$ and $\hat{\bar{y}}_u$ are sample means.
+
+Let us first look at the continent variable.
+
+<<sub-task1-cont>>=
+
+@
+
+
+Hence $\widehat{SSB}$ based on ``continent" variable is 621.
+
+We do the same calculation with the ``Branch" variable.
+
+<<sub-task1-branch>>=
+
+@
+
+
+Hence $\widehat{SSB}$ based on ``Branch" variable is 1410.  
+
+Since $\widehat{SSB}$ based on ``Branch" variable is greater, we should choose ``Branch" as stratification variable.
+
+\section{Sub-task 2}
+We assume that the cost for each sample is the same across strata. Under this assumption, we know from lecture that optimal allocation is Neyman allocation, i.e.
+
+$$
+n_h\propto N_h\sqrt{S^2_h}.
+$$
+
+Once again, we do not cannot calculate $S^2_h$ so we replace it by the sample version $s^2_h$ and let
+$$
+n_h\propto N_h\sqrt{s^2_h}.
+$$
+
+Therefore, if we want to take a simple stratified sample of size $n$ on the ``Branch" variable under optimal (Neyman) allocation, we have
+
+$$
+n_h=\frac{n N_h \sqrt{s^2_h}}{\sum_{h=1}^H N_h \sqrt{s^2_h}},
+$$
+
+where $\sqrt{s^2_h}$ can be readily calculated from the sample. We finish Sub-task 2 with a numerical illustration where $n=6000$.
+
+<<sub-task2>>=
+
+@
+
+
+Hence the optimal sample sizes from California, Hong Kong, and Paris are 2533, 1236, and 2231 respectively.
+
+
+\end{document}
