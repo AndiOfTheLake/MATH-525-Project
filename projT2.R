@@ -19,11 +19,11 @@ cont<-c("Africa", "Americas", "Asia", "Europe", "Oceania")
 ybar_hu_cont_hat<-c(); ssqr_cont<-c()
 for (h in 1:length(cont)){
 dt.h <- dt %>% filter(continent == cont[h]) %>% select(Rating) %>% pull()
-ybar_hu_cont_hat[h]<-mean(dt.h)
-ssqr_cont[h]<-as.numeric(var(dt.h))
+ybar_hu_cont_hat[h]<-mean(dt.h) # sample stratum mean for "continent"
+ssqr_cont[h]<-as.numeric(var(dt.h)) # sample within stratum variance for "continent"
 }
 
-(ybar_hat<-mean(dt$Rating))
+(ybar_hat<-mean(dt$Rating)) # sample mean
 
 (SSB_cont_hat<-((ybar_hu_cont_hat-ybar_hat)^2*N_h_cont)%>% sum) # SSB based on "continent"
 
@@ -39,8 +39,8 @@ brch<-c("Disneyland_California",  "Disneyland_HongKong",  "Disneyland_Paris")
 ybar_hu_brch_hat<-c(); ssqr_brch<-c()
 for (h in 1:length(brch)){
   dt.h <- dt %>% filter(Branch == brch[h]) %>% select(Rating) %>% pull()
-  ybar_hu_brch_hat[h]<-mean(dt.h)
-  ssqr_brch[h]<-as.numeric(var(dt.h))
+  ybar_hu_brch_hat[h]<-mean(dt.h) # sample stratum mean for "Branch"
+  ssqr_brch[h]<-as.numeric(var(dt.h)) # sample within-stratum variance for "Branch"
 }
 
 (SSB_brch_hat<-((ybar_hu_brch_hat-ybar_hat)^2*N_h_brch)%>% sum) # SSB based on "Branch"

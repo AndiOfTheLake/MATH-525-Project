@@ -159,7 +159,7 @@ $$
 where $\hat{\bar{y}}_{hu}$ and $\hat{\bar{y}}_u$ are sample means. It follows that a suitable estimate of $\Delta$ is 
 
 $$
-\hat{\Delta}=\widehat{SSB}-s^2_h.
+\hat{\Delta}=\widehat{SSB}-\sum_{h=1}^H s^2_h.
 $$
 
 Let us first look at the continent variable.
