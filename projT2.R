@@ -46,7 +46,7 @@ for (h in 1:length(brch)){
   ybar_hu_hat[h]<-mean(dt.h)
 }
 
-ybar_hu_hat
+ybar_hu_hat 
 
 (SSB_brch_hat<-((ybar_hu_hat-ybar_hat)^2*N_h_brch)%>% sum)
 ## ---- sub-task2 ----
