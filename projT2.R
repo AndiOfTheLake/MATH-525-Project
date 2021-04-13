@@ -6,12 +6,8 @@ library(tidyverse)
 library(knitr)
 library(kableExtra)
 
-## ---- load the data ----
+## ---- load data ----
 dt<-read.csv("Employee_A_data.csv")
-dim(dt)
-variable.names(dt)
-head(dt)
-sum(is.na(dt)) # no missing data
 
 ## ---- sub-task1-cont ----
 # continent variable
@@ -49,5 +45,17 @@ for (h in 1:length(brch)){
 ybar_hu_hat 
 
 (SSB_brch_hat<-((ybar_hu_hat-ybar_hat)^2*N_h_brch)%>% sum)
+
 ## ---- sub-task2 ----
-set.seed(0412)
+ssqr_h <- c()
+for (h in 1:length(brch)){
+  dt.h <- dt %>% filter(Branch == brch[h]) %>% select(Rating) %>% pull()
+  ssqr_h[h]<-as.numeric(var(dt.h))
+}
+
+ssqr_h # estimated within-stratum variances
+
+n<-6000 # total sample size
+
+# optimal sample sizes from each stratum
+(n_h<-(n*N_h_brch*sqrt(ssqr_h)/sum(N_h_brch*sqrt(ssqr_h))) %>% round)
