@@ -16,10 +16,13 @@ N<-40041
 n<-6000
 drv_srs_design = svydesign(id=~1, data=dt, fpc=rep(N, n))
 
-# estimate the mean
+# estimate the mean (two different ways)
+svytotal(x=~Rating, design=drv_srs_design)[[1]]/N
 svymean(x=~Rating, design=drv_srs_design)
 
-# 95% CI for the mean
+
+# 95% CI for the mean (two different ways)
+svytotal(x=~Rating, design=drv_srs_design) %>% confint()*(1/N)
 svymean(x=~Rating, design=drv_srs_design) %>% confint()
 
 ## ---- sub task 2 Domain estimation ----
