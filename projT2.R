@@ -32,9 +32,12 @@ ssqr_cont[h]<-as.numeric(var(dt.h)) # sample within stratum variance for "contin
 ## ---- sub-task1-branch ----
 # branch variable
 # we are given that
-N_h_brch<-c(19406, 9619, 13629)
+N_h_brch<-c(19406, 9619, 13629) # population branch sizes
 
-brch<-c("Disneyland_California",  "Disneyland_HongKong",  "Disneyland_Paris")
+
+brch<-c("Disneyland_California",  
+        "Disneyland_HongKong",  
+        "Disneyland_Paris") # Branch names
 
 ybar_hu_brch_hat<-c(); ssqr_brch<-c()
 for (h in 1:length(brch)){
