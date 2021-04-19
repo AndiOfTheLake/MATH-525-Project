@@ -16,7 +16,7 @@ dtB_probs<-as.matrix(read.csv("Employee_B_probs.csv", header=FALSE))
 
 # change variable name
 colnames(dtB_overall)[2]<- "Average_of_Ratings"
-colnames(dtB_bybrch)[2]<- "Average_of_Ratings"
+colnames(dtB_bybrch)[3]<- "Average_of_Ratings"
 
 ## ---- sub task 1 ----
 t_i<-(dtB_overall$Average_of_Ratings)*(dtB_overall$m_i) # cluster total
@@ -53,7 +53,48 @@ t_i
 y_bar_hat + qnorm(c(0.025, 0.975))*SE_y_bar_hat
 
 ## ---- sub task 2 ----
+N_h_brch<-c(19406, 9619, 13629) # population branch sizes
 
+
+brch<-c("Disneyland_California",  
+        "Disneyland_HongKong",  
+        "Disneyland_Paris") # Branch names
+
+# add a column of cluster totals to data frame
+dtB_bybrch$t_i<-(dtB_bybrch$Average_of_Ratings)*(dtB_bybrch$m_i)
+
+ssqr<-c(); t_hat<-c(); y_bar_hat<-c(); SE_y_bar_hat<-c()
+for (h in 1:length(brch)){
+  dtB.h <- dtB_bybrch %>% filter(Branch == brch[h]) # subsetting by Branch
+  ssqr[h]<-(dtB.h$t_i)%>% var() # sample variance of cluster totals by Branch
+  t_hat[h]<-103/15*sum(dtB.h$t_i) # estimated cluster totals
+  y_bar_hat[h]<-t_hat[h]/N_h_brch[h] # estimated cluster means
+  SE_y_bar_hat[h]<-((1-15/103)*ssqr[h]/15) %>% sqrt()*103/N_h_brch[h] # estimated SE
+}
+
+CI<-cbind(brch, 
+          y_bar_hat %>% round(.,3),
+          (y_bar_hat + qnorm(0.025))%>% round(.,3),
+          (y_bar_hat + qnorm(0.975))%>% round(.,3)
+          )  %>% 
+  data.frame() %>%
+  format(., justify="left") 
+
+colnames(CI)<-c("BRANCH",
+                "Estimated average",
+                "2.5%",
+                "97.5%")
+CI # 95% CI
+
+# The confidence intervals are very, very wide and they overlap.
+
+# domain estimation (Ratio estimator) (I cannot figure out what to do)
+dtB_bybrch$fpc<-15
+onestage_drv_design = svydesign(id=~Year_Month,fpc=~fpc,
+                                data=dtB_bybrch)
+onestage_drv_design
+
+svyby(~Average_of_Ratings, ~Branch, design = onestage_drv_design, svymean)
 
 ## ---- sub task 3 ----
 
