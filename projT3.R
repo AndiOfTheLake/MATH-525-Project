@@ -12,13 +12,53 @@ library(kableExtra)
 
 dtB_overall<-read.csv("Employee_B_overall.csv")
 dtB_bybrch<-read.csv("Employee_B_by_Branch.csv")
-dtB_probs<-as.matrix(read.csv("Employee_B_probs.csv", header=FALSE))
+p<-as.matrix(read.csv("Employee_B_probs.csv", header=FALSE))
 
 # change variable name
 colnames(dtB_overall)[2]<- "Average_of_Ratings"
 colnames(dtB_bybrch)[3]<- "Average_of_Ratings"
 
+
 ## ---- sub task 1 ----
+dtB_overall
+dtB_overall$t_i<-(dtB_overall$Average_of_Ratings)*(dtB_overall$m_i) # cluster total
+
+
+(pi<-diag(p)) # first order inclusion probabilities
+
+# Now we estimate the population total using H-T estimator
+sum(dtB_overall$t_i/pi)
+
+# Hence the population mean is estimated to be 
+# (we are using the number of observations as given in the tables)
+(y_bar_HT<-sum(dtB_overall$t_i/pi)/(19406+9619+13629))
+
+# Now we find the variance of the estimator for the total
+tmp<-matrix(NA, 15, 15)
+for (i in (1:15)){
+  for (k in (1:15)){
+    tmp[i,k]<-(p[i,k]-p[i,i]*p[k,k])/p[i,k]
+  }
+}
+
+# H-T estimator of variance of H-T estimator for population total
+(var_y_HT<-(t(dtB_overall$t_i/pi) %*% tmp %*% (dtB_overall$t_i/pi)) %>%
+  as.numeric)
+
+# hence we obtain estimated SE for population mean
+(SE_y_bar_HT<-sqrt(var_y_HT)/(19406+9619+13629))
+
+# hence the 95% CI for the population mean is
+y_bar_HT + qnorm(c(0.025, 0.975))*SE_y_bar_HT
+
+
+
+## ---- sub task 2 ----
+
+
+## ---- sub task 3 ----
+
+## ---- sub task 1 script----
 t_i<-(dtB_overall$Average_of_Ratings)*(dtB_overall$m_i) # cluster total
 t_i
 
@@ -52,7 +92,7 @@ t_i
 # 95% CI for population mean, which is not informative
 y_bar_hat + qnorm(c(0.025, 0.975))*SE_y_bar_hat
 
-## ---- sub task 2 ----
+## ---- sub task 2 script----
 N_h_brch<-c(19406, 9619, 13629) # population branch sizes
 
 
@@ -96,5 +136,5 @@ onestage_drv_design
 
 svyby(~Average_of_Ratings, ~Branch, design = onestage_drv_design, svymean)
 
-## ---- sub task 3 ----
+## ---- sub task 3 script ----
 
