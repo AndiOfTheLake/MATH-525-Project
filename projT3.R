@@ -148,11 +148,10 @@ t_i
 (SE_y_bar_hat<-SE_t_hat/40041 )
 
 # 95% CI for population mean, which is not informative
-y_bar_hat + qnorm(c(0.025, 0.975))*SE_y_bar_hat
+(y_bar_hat + qnorm(c(0.025, 0.975))*SE_y_bar_hat)
 
 ## ---- sub task 2 script----
 N_h_brch<-c(19406, 9619, 13629) # population branch sizes
-
 
 brch<-c("Disneyland_California",  
         "Disneyland_HongKong",  
@@ -165,14 +164,10 @@ ssqr<-c(); t_hat<-c(); y_bar_hat<-c(); SE_y_bar_hat<-c()
 for (h in 1:length(brch)){
   
   dtB.h <- dtB_bybrch %>% filter(Branch == brch[h]) # subsetting by Branch
-  
   ssqr[h]<-t(dtB.h$t_i)%*% tmp %*% (dtB.h$t_i) # estimated variance of branch totals by Branch
-  
   t_hat[h]<-sum(dtB.h$t_i/pi) # estimated branch total
-  
   y_bar_hat[h]<-t_hat[h]/N_h_brch[h] # estimated branch average
-  
-  SE_y_bar_hat[h]<-sqrt(ssqr[h])/N_h_brch[h] # estimated SE
+  SE_y_bar_hat[h]<-sqrt(ssqr[h])/N_h_brch[h] # estimated branch SE
 }
 
 CI<-cbind(brch, 
