@@ -1,0 +1,151 @@
+---
+title: "Q3-Andrew"
+author: "Andrew Cheng"
+date: "20/04/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(survey)
+library(srvyr)
+library(sampling)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+``` 
+
+## Q3
+
+```{r}
+# ---- load data ----
+# I think for the first two data sets, the variable name
+# "Total_of_Ratings" should be "Average_of_Ratings" instead
+dtB_overall<-read.csv("Employee_B_overall.csv")
+dtB_bybrch<-read.csv("Employee_B_by_Branch.csv")
+p<-as.matrix(read.csv("Employee_B_probs.csv", header=FALSE))
+
+# change variable name
+colnames(dtB_overall)[2]<- "Average_of_Ratings"
+colnames(dtB_bybrch)[3]<- "Average_of_Ratings"
+```
+
+# Subtask 1
+```{r}
+## ---- sub task 1 ----
+# we are using the number of observations as given in the tables
+# i.e. N_pop=19406+9619+13629=42654
+(N_pop<-19406+9619+13629)
+
+dtB_overall$t_i<-(dtB_overall$Average_of_Ratings)*(dtB_overall$m_i) # cluster total
+
+pi<-diag(p) # first order inclusion probabilities
+
+# Now we estimate the population total using H-T estimator
+sum(dtB_overall$t_i/pi)
+
+# Hence the population mean is estimated to be 
+# (we are using the number of observations as given in the tables)
+(y_bar_HT<-sum(dtB_overall$t_i/pi)/(N_pop))
+
+# Now we find the variance of the estimator for the total
+tmp<-matrix(NA, 15, 15)
+for (i in (1:15)){
+  for (k in (1:15)){
+    tmp[i,k]<-(p[i,k]-p[i,i]*p[k,k])/p[i,k]
+  }
+}
+
+# H-T estimator of variance of H-T estimator for population total
+(var_y_HT<-(t(dtB_overall$t_i/pi) %*% tmp %*% (dtB_overall$t_i/pi)) %>%
+  as.numeric)
+
+# hence we obtain estimated SE for population mean
+(SE_y_bar_HT<-sqrt(var_y_HT)/N_pop)
+
+# hence the 95% CI for the population mean is
+y_bar_HT + qnorm(c(0.025, 0.975))*SE_y_bar_HT
+
+```
+
+
+We use the Horvitz-Thompson estimator in order to obtain an unbiased estimator. The explicit forms of the estimator and its (H-T) variance estimator being:
+
+$$ \hat{\bar{y}}_{HT} = \sum_{i \in \mathcal{S}}\frac{1}{N_{pop}} \frac{t_i}{\pi_i}  $$
+
+and
+
+$$
+\hat{V}_{HT}( \hat{\bar{y}}_{HT})
+=\frac{1}{N_{pop}^2}
+\left ( \sum_{i \in \mathcal{S}}\pi_i(1-\pi_i)\frac{t_i^2}{\pi_i^2}\frac{1}{\pi_i}
++\sum_{i \in \mathcal{S}}\sum_{k\neq i}(\pi_{ik}-\pi_i\pi_k)\frac{t_i}{\pi_i}\frac{t_k}{\pi_k} \right )
+$$
+
+where the $\pi_i$ denotes the marginal inclusion probability of the $i^{th}$ month as they appear in the overall data set and $\pi_{ik}$ denotes the joint inclusion probability of the $i^{th}$ and the $k^{th}$ month. Also $N_{pop} = 42,654$ denotes the total population size.  In practice, $\pi_i$'s were taken from the $i^{th}$ element along the principal diagonal of the given matrix in the file "Employee_B_probs.csv". 
+
+From the code, we found the following value: 
+
+$$ \hat{\bar{y}}_{HT} = 4.630348 $$
+
+with a 95% confidence interval:
+$$CI_{95}(\bar{y}_{HT}) =  (3.768300 ,\ 5.492396)$$
+We see that this confidence interval is very wide. In particular, it covers impossible values that are greater than 5. This is perhaps because we are taking a cluster sample, which results in larger SE's than SRS.
+
+# Subtask 2
+
+```{r}
+## ---- sub task 2 ----
+N_h_brch<-c(19406, 9619, 13629) # population branch sizes
+
+
+brch<-c("Disneyland_California",  
+        "Disneyland_HongKong",  
+        "Disneyland_Paris") # Branch names
+
+# add a column of cluster totals to data frame
+dtB_bybrch$t_i<-(dtB_bybrch$Average_of_Ratings)*(dtB_bybrch$m_i)
+
+ssqr<-c(); t_hat<-c(); y_bar_hat<-c(); SE_y_bar_hat<-c()
+for (h in 1:length(brch)){
+  
+  dtB.h <- dtB_bybrch %>% filter(Branch == brch[h]) # subsetting by Branch
+  
+  ssqr[h]<-t(dtB.h$t_i) %*% tmp %*% (dtB.h$t_i) # estimated variance of branch-specific total
+  
+  t_hat[h]<-sum(dtB.h$t_i/pi) # estimated branch total
+  
+  y_bar_hat[h]<-t_hat[h]/N_h_brch[h] # estimated branch average
+  
+  SE_y_bar_hat[h]<-sqrt(ssqr[h])/N_h_brch[h] # estimated SE
+}
+
+CI<-cbind(brch, 
+          y_bar_hat %>% round(.,3),
+          (y_bar_hat + qnorm(0.025))%>% round(.,3),
+          (y_bar_hat + qnorm(0.975))%>% round(.,3)
+)  %>% 
+  data.frame() %>%
+  format(., justify="left") 
+
+colnames(CI)<-c("BRANCH",
+                "Estimated average",
+                "2.5%",
+                "97.5%")
+CI # 95% CI
+```
+
+It is important to realize that we are applying one-stage sampling. Thus the $\pi_i$'s remain the same. We can then partition the data into the three branches and then apply the Horvitz-Thompson estimator in Q3 subtask 1, to each branch. 
+
+In other words, we have:
+
+$$ \hat{\bar{y}}_{HT,k} = \sum_{i \in \mathcal{S_k}}\frac{1}{N_{pop}} \frac{t_i}{\pi_i}, \quad \quad  k \in \{\text{cali, HK, paris}\}  $$
+The estimated variance is also calculated in a similar manner as described in Subtask1. From the code, we observe the obtained estimated averages are:
+
+$$\hat{\bar{y}}_{HT,cali} = 4.829, \quad  \hat{\bar{y}}_{HT,HK} = 4.494, \quad \hat{\bar{y}}_{HT,paris} = 4.443$$
+with the following confidence intervals:
+
+$$CI_{95}(\bar{y}_{cali}) = (2.869, \ 6.789), \quad  CI_{95}(\bar{y}_{HK}) = (2.534	, \ 6.454), \quad  CI_{95}(\bar{y}_{paris}) = (2.483	, \ 6.403
+)$$
+
+Once again we obtain some very wide confidence intervals. This means that there is no evidence that the average rating is different between any two branches.

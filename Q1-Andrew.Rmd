@@ -1,0 +1,112 @@
+---
+title: "Untitled"
+author: "Andrew Cheng"
+date: "20/04/2021"
+output: 
+  html_document:
+    keep_md: yes
+---
+
+## Q1 
+# Subtask 1
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(survey)
+library(srvyr)
+library(sampling)
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+``` 
+
+```{r}
+## ---- load data ----
+dt<-read.csv("Employee_A_data.csv")
+
+```
+
+```{r}
+## ---- sub task 1----
+# This is an SRS of size 6000, not a stratified sample
+# drv: Disney Review
+N<-19406 + 9619 + 13629
+n<-6000
+drv_srs_design = svydesign(id=~1, data=dt, fpc=rep(N, n))
+
+# estimate the mean (two different ways)
+svytotal(x=~Rating, design=drv_srs_design)[[1]]/N
+svymean(x=~Rating, design=drv_srs_design)
+
+
+# 95% CI for the mean (two different ways)
+svytotal(x=~Rating, design=drv_srs_design) %>% confint()*(1/N)
+svymean(x=~Rating, design=drv_srs_design) %>% confint()
+```
+
+Let $y_i$ denote the i-th review in the population of reviews, $\mathcal{S}_A$ denote the simple random sample collected by employee A, and $n_{A} = 6000$ denote the size of the sample collected by employee A. 
+We can unbiasedly estimate the average satisfication rating overall for the population by using the following estimator: 
+$$ \hat{\bar{y}}_A =  \frac{\sum_{i \in \mathcal{S}_{A}}y_{i}}{n_{A}}$$
+
+According to our code, we obtain the following estimate and its standard error: 
+
+$$ \hat{\bar{y}}_A = 4.223, \quad \quad \hat{SE}(\hat{\bar{y}}_A ) = 0.0125 $$ 
+which yields the 95% confidence interval: 
+$$CI_{95}(\bar{y}_{A}) = (4.198, \  4.247)$$
+
+# Subtask 2
+
+```{r}
+## ---- sub task 2 Domain estimation ----
+svyby(~Rating, ~Branch, design = drv_srs_design, svymean)
+
+# 95% CI
+CI_dom<-svyby(~Rating, ~Branch, design = drv_srs_design, svymean) %>% confint() 
+
+CI_dom
+```
+
+
+
+Now we partition the simple random sample $\mathcal{S}_{A}$ into three samples: 
+$$\mathcal{S}_{Cali}$$
+$$\mathcal{S}_{HK}$$
+$$\mathcal{S}_{Paris}$$
+which are the reviews in $\mathcal{S}_A$ corresponding to the theme parks located in California, Hong Kong, and Paris, respectively. We find the unbiased estimate of each of these parks using the following estimator: 
+
+$$  \hat{\bar{y}}_k =  \frac{\sum_{i \in \mathcal{S}_{k}}y_{i}}{n_{k}}, \quad \quad  k \in \{\text{cali, HK, paris}\}$$ 
+
+From our code, we obtain:
+
+$$\hat{\bar{y}}_{cali} = 4.396533, \quad \hat{\bar{y}}_{HK} = 4.213475, \quad \hat{\bar{y}}_{paris} = 3.976963$$
+with their respective standard errors:
+$$\hat{SE}(\hat{\bar{y}}_{cali}) = 0.01676912, \quad \hat{SE}(\hat{\bar{y}}_{HK}) =  0.02390043, \quad \hat{SE}(\hat{\bar{y}}_{paris}) = 0.02531902$$
+and thus resulting in their 95% confidence intervals:
+
+$$CI_{95}(\bar{y}_{cali}) = (4.363666,\ 4.429400), \quad CI_{95}(\bar{y}_{HK}) = (4.166631,\ 4.260319)\quad CI_{95}(\bar{y}_{paris}) = (3.927339,\ 4.026588)$$
+We see that these confidence intervals are all disjoint, meaning that there is evidence that the average rating is different between any two branches.
+
+## missing post-stratification 
+
+```{r}
+# create post stratification design
+poptable = data.frame(Branch = c("Disneyland_California", "Disneyland_HongKong",  "Disneyland_Paris"), 
+                      total = c(19406, 9619, 13629)) # name has to match o.w. does not work
+poptable
+
+postdesign = postStratify(design = drv_srs_design, 
+                          strata = ~Branch, 
+                          population = poptable)
+
+# domain estimation with post stratification
+svyby(~Rating, ~Branch, design = postdesign, svymean)
+
+# 95% CI
+(CI_dom_post<-svyby(~Rating, ~Branch, design = postdesign, svymean) %>% 
+  confint() )
+# The CI's do not seem to overlap
+
+# compare
+CI_dom
+CI_dom_post
+```
