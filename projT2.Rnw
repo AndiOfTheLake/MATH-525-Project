@@ -101,7 +101,8 @@
 \geometry{letterpaper, portrait, margin=1in}%set page margins
 
 \title{MATH 525 Project Task 2}
-\author{Andi Qian \\}
+\author{Andi Qian \\
+Andrew Cheng\\}
 \date{last updated: \today}
 
 %\doublespacing %(this makes double space, from setspac package)
