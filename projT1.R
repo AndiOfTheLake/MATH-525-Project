@@ -26,7 +26,54 @@ svymean(x=~Rating, design=drv_srs_design)
 svytotal(x=~Rating, design=drv_srs_design) %>% confint()*(1/N)
 svymean(x=~Rating, design=drv_srs_design) %>% confint()
 
-## ---- sub task 2 Domain estimation ----
+
+
+
+## ---- sub task 2 pt1----
+N_h_brch<-c(19406, 9619, 13629) # population branch sizes
+
+brch<-c("Disneyland_California",  
+        "Disneyland_HongKong",  
+        "Disneyland_Paris") # Branch names
+fpc<-n/N
+ssqr<-c(); t_hat<-c(); y_bar_hat<-c(); SE_y_bar_hat<-c()
+
+for (h in 1:length(brch)){
+  
+  dt.h <- dt %>% filter(Branch == brch[h]) %>% select(Rating) %>% pull # subset by Branch
+  ssqr[h]<-var(dt.h) # estimated variance of branch totals by Branch
+  t_hat[h]<-(N/n)*sum(dt.h)  # estimated branch total
+  y_bar_hat[h]<-t_hat[h]/N_h_brch[h] # estimated branch average
+  SE_y_bar_hat[h]<-sqrt(fpc*ssqr[h]/n)/N_h_brch[h] # estimated branch SE
+}
+
+CI<-cbind(brch, 
+          y_bar_hat %>% round(.,3),
+          (y_bar_hat + qnorm(0.025))%>% round(.,3),
+          (y_bar_hat + qnorm(0.975))%>% round(.,3)
+)  %>% 
+  data.frame() %>%
+  format(., justify="left") 
+
+colnames(CI)<-c("BRANCH",
+                "Estimated average",
+                "2.5%",
+                "97.5%")
+CI # 95% CI
+
+
+
+## ---- sub task 2 pt2 ----
+# Domain estimation
+svyby(~Rating, ~Branch, design = drv_srs_design, svymean)
+
+# 95% CI
+svyby(~Rating, ~Branch, design = drv_srs_design, svymean) %>% confint() 
+# The CI's do not seem to overlap
+
+
+## ---- sub task 2 pt ----
+# Domain estimation
 svyby(~Rating, ~Branch, design = drv_srs_design, svymean)
 
 # 95% CI
@@ -34,6 +81,13 @@ svyby(~Rating, ~Branch, design = drv_srs_design, svymean)
   confint() )
 # The CI's do not seem to overlap
 
+
+
+
+
+
+
+'
 ## ---- sub task 2 domain estimation with Post strat ----
 # First create a population table. We use the number of observations
 # given in tables for each branch. Although the total number of 
@@ -58,13 +112,13 @@ svyby(~Rating, ~Branch, design = postdesign, svymean)
 # 95% CI
 (CI_dom_post<-svyby(~Rating, ~Branch, design = postdesign, svymean) %>% 
   confint() )
-# The CI's do not seem to overlap
+# The CIs do not seem to overlap
 
 # compare
 CI_dom
 CI_dom_post
 
-# I don't know why I get the same answer
+# I do not know why I get the same answer
 
 
 
