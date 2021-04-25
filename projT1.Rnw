@@ -1,0 +1,247 @@
+%a latex reference could be found here https://en.wikibooks.org/wiki/LaTeX
+\documentclass[12pt, letterpaper, twoside]{article}
+%fontsize, papersize, NO separate titlepage
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bbm}
+\usepackage{bookmark}% without it there will be no bookmarks for the 
+\usepackage{geometry}
+\usepackage{setspace}% used to set spacings between lines
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% paragraph glue %%%%%%%%%%%%%%%%%%%%%%%%%%
+\raggedbottom % changes paragraph glue, otherwise awkwardly huge spaces
+
+
+% Some macros 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Probability and statistics %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\E}[1]{\mathbbm{E}\left [ #1 \right ]} % Expectation
+\newcommand{\var}[1]{\text{Var}\left [ #1 \right ]} % Variance
+\newcommand{\cov}[1]{\text{Cov}\left [ #1 \right ]} % Covariance
+
+\providecommand{\P}{}
+\renewcommand{\P}{\text{P}} % probability measure, rarely used
+\newcommand{\pr}[1]{\text{P}\left ( #1 \right )} % probability of a set, often used
+
+\newcommand{\set}[1]{\left \{ #1 \right \}} % set 
+\newcommand{\Set}[2]{\left \{#1 \mid #2\right \}} % set, #2 is a \text{$x$} kind of argument
+
+\newcommand{\I}{\mathcal{I}} % pi-system
+\newcommand{\D}{\mathcal{D}} % Dynkin's system
+
+\newcommand{\limit}[2]{\lim_{#1 \to #2}} % limit
+\newcommand{\rbr}[1]{\left ( #1 \right )} % round brackets
+\newcommand{\sbr}[1]{\left [ #1 \right ]} % square brackets
+\newcommand{\abs}[1]{\left | #1 \right |} % absolute value
+
+\newcommand{\sam}{\mathcal{S}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%% linear algebra and other mathematics %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\DeclareMathOperator*{\tr}{tr} % Trace
+\DeclareMathOperator*{\diag}{diag} % Diagonal matrix
+\DeclareMathOperator*{\sign}{sign} % Sign
+\newcommand{\norm}[2]{\left \| #1 \right \|_{#2}} % norm
+\newcommand{\1}{\mathbbm{1}} % Indicator
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+%%%%%%%%%%%%%%%%%%%%%%% NATURAL NUMBERS, INTEGERS, ETC. %%%%%%%%%%%%%%%%
+\providecommand{\R}{}
+\providecommand{\Z}{}
+\providecommand{\N}{}
+\providecommand{\C}{}
+\providecommand{\Q}{}
+
+\renewcommand{\R}{\mathbb{R}}
+\renewcommand{\Z}{\mathbb{Z}}
+\renewcommand{\N}{{\mathbb N}}
+\renewcommand{\C}{\mathbb{C}}
+\renewcommand{\Q}{\mathbb{Q}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%% BOLDFACE %%%%%%%%%%%%%%%%%%%%
+\newcommand{\bA}{\mathbf{A}} 
+\newcommand{\bB}{\mathbf{B}} 
+\newcommand{\bC}{\mathbf{C}} 
+\newcommand{\bD}{\mathbf{D}} 
+\newcommand{\bE}{\mathbf{E}} 
+\newcommand{\bF}{\mathbf{F}} 
+\newcommand{\bG}{\mathbf{G}} 
+\newcommand{\bH}{\mathbf{H}} 
+\newcommand{\bI}{\mathbf{I}} 
+\newcommand{\bJ}{\mathbf{J}} 
+\newcommand{\bK}{\mathbf{K}} 
+\newcommand{\bL}{\mathbf{L}} 
+\newcommand{\bM}{\mathbf{M}} 
+\newcommand{\bN}{\mathbf{N}} 
+\newcommand{\bO}{\mathbf{O}} 
+\newcommand{\bP}{\mathbf{P}} 
+\newcommand{\bQ}{\mathbf{Q}} 
+\newcommand{\bR}{\mathbf{R}} 
+\newcommand{\bS}{\mathbf{S}} 
+\newcommand{\bT}{\mathbf{T}} 
+\newcommand{\bU}{\mathbf{U}} 
+\newcommand{\bV}{\mathbf{V}} 
+\newcommand{\bW}{\mathbf{W}} 
+\newcommand{\bX}{\mathbf{X}} 
+\newcommand{\bY}{\mathbf{Y}} 
+\newcommand{\bZ}{\mathbf{Z}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% boldsymbol %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% color %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% file specific macros %%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\varprop}[1]{\text{Var}_{prop}\left [ #1 \right ]} % Variance of (population total or mean) under proportional allocation
+\newcommand{\varopt}[1]{\text{Var}_{opt}\left [ #1 \right ]} % Variance of (population total or mean) under optimal allocation
+\newcommand{\hvar}[1]{\hat{\text{Var}}\left [ #1 \right ]}
+
+\setcounter{secnumdepth}{0}%no automatic numbering of the sections
+\geometry{letterpaper, portrait, margin=1in}%set page margins
+
+\title{MATH 525 Project Task 1}
+\author{
+Andi Qian \\
+Andrew Cheng\\}
+\date{last updated: \today}
+
+%\doublespacing %(this makes double space, from setspac package)
+\begin{document}
+
+\maketitle
+
+<<setup, cache=FALSE, include=FALSE>>=
+library(knitr)
+
+opts_chunk$set(tidy.opts=list(width.cutoff=60), 
+               background = '#FAFAFA', 
+               comment = NA, warning = F, tidy = T, 
+  fig.align='center', fig.height=4.25, fig.width=6)
+
+#digits<-4
+#options(scipen=2, digits=digits,width = 80)
+@
+
+<<include=FALSE>>=
+read_chunk("projT1.R")
+@
+
+<<pkg, include=FALSE>>=
+
+@
+
+
+<<load data>>=
+
+@
+
+\section{Sub-task 1}
+
+<<sub task 1>>=
+
+@
+
+Let $y_i$ denote the i-th review in the population of reviews, $\mathcal{S}_A$ denote the simple random sample collected by employee A, and $n = 6000$ denote the size of the sample collected by employee A. 
+We can unbiasedly estimate the average satisfaction rating overall for the population by using the following estimator: 
+$$ \hat{\bar{y}}_A =  \frac{\sum_{i \in \mathcal{S}_{A}}y_{i}}{n}$$
+
+According to our code, we obtain the following estimate and its standard error: 
+
+$$ \hat{\bar{y}}_A = 4.223, \quad \quad \hat{SE}(\hat{\bar{y}}_A ) = 0.0125 $$ 
+which yields the 95\% confidence interval: 
+$$CI_{95}(\bar{y}_{A}) = (4.198, \  4.247)$$
+
+\section{Sub-task 2}
+
+\subsection{Part 1}
+
+Let $x_{ih}=\1_{\set{\text{$i$ is in stratum $h$}}}$. Notice that $x_{ih}$ is \textit{not} a random quantity and for every $h$ we have
+
+$$
+t_{yh}=\sum_{i=1}^N x_{ih} y_i.
+$$
+
+It is clear that 
+
+$$
+\hat{t}_{yh}=\frac{N}{n}\sum_{i \in \mathbf{S}_A}x_{ih} y_i
+$$
+
+is an unbiased estimator for $t_{yh}$ because
+
+\begingroup
+\allowdisplaybreaks
+\begin{align*}
+    \E{\hat{t}_{yh}}
+    &=\frac{N}{n}\E{\sum_{i=1}^N Z_i x_{ih} y_i}\\
+    &=\frac{N}{n} \sum_{i=1}^N\frac{n}{N} x_{ih} y_i\\
+    &=\sum_{i=1}^N x_{ih} y_i\\
+    &=t_{yh}
+\end{align*}
+\endgroup
+
+It can also be shown (details omitted) that
+
+$$
+\var{\hat{t}_{yh}}=\rbr{1-\frac{n}{N}}\frac{S^2_h}{n}.
+$$
+
+Therefore it is clear that
+
+\begin{align*}
+    \hat{\bar{y}}_h&=\frac{\hat{t}_{yh}}{N_h}\\
+    \hvar{\hat{\bar{y}}_h}&=\rbr{1-\frac{n}{N}}\frac{s^2_h}{n N_h^2}.
+\end{align*}
+
+<<sub task 2 pt1>>=
+
+@
+
+From our code, we obtain:
+
+$$\hat{\bar{y}}_{cali} = \Sexpr{4.46}, \quad \hat{\bar{y}}_{HK} = 4.114, \quad \hat{\bar{y}}_{paris} = 3.962$$
+with their respective 95\% confidence intervals:
+
+\begin{align*}
+CI_{95}(\bar{y}_{cali}) &= (2.5,\   6.42)\\
+CI_{95}(\bar{y}_{HK}) &= (2.154,\ 6.074)\\
+CI_{95}(\bar{y}_{paris}) &= (2.002,\ 5.922)
+\end{align*}
+
+
+We see that these confidence intervals are very wide and are overlap, meaning that there is no evidence that the average rating is different between any two branches.
+
+\subsection{Part 2}
+
+Employee A could use domain estimation to achieve more precision, although ratio estimators are biased.
+
+<<sub task 2 pt2>>=
+
+@
+
+We partition the simple random sample $\mathcal{S}_{A}$ into three samples: 
+$$\mathcal{S}_{Cali}$$
+$$\mathcal{S}_{HK}$$
+$$\mathcal{S}_{Paris}$$
+which are the reviews in $\mathcal{S}_A$ corresponding to the theme parks located in California, Hong Kong, and Paris, respectively. We find the unbiased estimate of each of these parks using the following estimator: 
+
+$$  \hat{\bar{y}}_k =  \frac{\sum_{i \in \mathcal{S}_{k}}y_{i}}{n_{k}}, \quad \quad  k \in \{\text{cali, HK, paris}\}$$ 
+
+From our code, we obtain:
+
+$$\hat{\bar{y}}_{cali} = 4.396533, \quad \hat{\bar{y}}_{HK} = 4.213475, \quad \hat{\bar{y}}_{paris} = 3.976963$$
+with their respective standard errors:
+$$\hat{SE}(\hat{\bar{y}}_{cali}) = 0.01676912, \quad \hat{SE}(\hat{\bar{y}}_{HK}) =  0.02390043, \quad \hat{SE}(\hat{\bar{y}}_{paris}) = 0.02531902$$
+and thus resulting in their 95\% confidence intervals:
+
+\begin{align*}
+CI_{95}(\bar{y}_{cali}) &= (4.363666,\ 4.429400)\\
+CI_{95}(\bar{y}_{HK}) &= (4.166631,\ 4.260319)\\ 
+CI_{95}(\bar{y}_{paris}) &= (3.927339,\ 4.026588)
+\end{align*}
+
+We see that this time, the confidence intervals are all disjoint as a result of variance reduction by conducting domain estimation. The disjointness of the confidence intervals suggests that there is evidence that the average rating is different between any two branches.
+
+\end{document}
