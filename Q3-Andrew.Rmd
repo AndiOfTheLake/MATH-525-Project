@@ -1,6 +1,6 @@
 ---
-title: "Q3-Andrew"
-author: "Andrew Cheng"
+title: "Task 3"
+author: "Andrew Cheng, Andi Qian"
 date: "20/04/2021"
 output: html_document
 ---
@@ -149,3 +149,15 @@ $$CI_{95}(\bar{y}_{cali}) = (2.869, \ 6.789), \quad  CI_{95}(\bar{y}_{HK}) = (2.
 )$$
 
 Once again we obtain some very wide confidence intervals. This means that there is no evidence that the average rating is different between any two branches.
+
+To achieve more precision, Employee B may use domain estimation. Unfortunately, we have not figured out the code to perform domain estimation on the data set.
+
+# Subtask 3
+
+The estimation of population mean in Task 1 has a much smaller standard error than the estimation of the same parameter in Task 3. This is not surprising since cluster sampling results in larger standard errors than SRS.
+
+Since we have not figured the domain estimation part for subtask2, we will make the best use of what we have at hand and do the comparisons. To determine which approach provides the best answers, we compare the standard errors or equivalently the length of the confidence intervals. 
+
+Based on our results, the estimates without the use of domain estimation have more or less the same standard errors. In Task 1, the confidence interval for each stratum mean has a length of about 4, which is also the case in (the first half of) subtask 2 of Task 3.
+
+If we successfully did domain estimation in subtask 2 of Task 3, we would also expect a reduction in standard errors, but we are not sure how much.
