@@ -98,7 +98,8 @@ CI # 95% CI
 
 # The confidence intervals are very, very wide and they overlap.
 
-# domain estimation (Ratio estimator) (I cannot figure out what to do)
+# domain estimation (Ratio estimator) 
+# (This is where we run into the issue of zero standard errors)
 dtB_bybrch$fpc1<-15
 onestage_drv_design = svydesign(id=~Year_Month,fpc=~fpc1,
                                 data=dtB_bybrch)
@@ -108,6 +109,7 @@ onestage_drv_design
 
 svyby(~Average_of_Ratings, ~Branch, design = onestage_drv_design, svymean)
 
+# The standard errors are zero.
 
 
 
